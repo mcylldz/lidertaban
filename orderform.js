@@ -197,8 +197,13 @@ if (orderForm) {
             orderDetails.value = 1499;
         }
 
+        // Generate unique event_id for Meta Pixel deduplication
+        const eventId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        orderDetails.event_id = eventId;
+
         localStorage.setItem('pixel_user_data', JSON.stringify(userData));
         localStorage.setItem('pixel_order_data', JSON.stringify(orderDetails));
+        localStorage.setItem('pixel_event_sent', 'false'); // Flag to track if event was sent
 
         try {
             // Check for ENV variable if available

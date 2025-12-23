@@ -26,11 +26,12 @@
         // Advanced Matching & Summary Logic
         const userDataStore = localStorage.getItem('pixel_user_data');
         const orderDataStore = localStorage.getItem('pixel_order_data');
+        const eventSent = localStorage.getItem('pixel_event_sent');
 
         // Define variable to hold summary HTML to inject later
         let summaryHTML = '';
 
-        if (userDataStore && orderDataStore) {
+        if (userDataStore && orderDataStore && eventSent === 'false') {
             try {
                 const userData = JSON.parse(userDataStore);
                 const orderData = JSON.parse(orderDataStore);
@@ -39,8 +40,22 @@
                 fbq('init', '898690175892128', userData);
                 fbq('track', 'PageView');
 
-                // Pixel Purchase
-                fbq('track', 'Purchase', orderData);
+                // Pixel Purchase with event_id for deduplication
+                const purchaseData = {
+                    value: orderData.value,
+                    currency: orderData.currency,
+                    content_ids: orderData.content_ids,
+                    content_type: orderData.content_type
+                };
+
+                // Send Purchase event with eventID
+                fbq('track', 'Purchase', purchaseData, { eventID: orderData.event_id });
+
+                console.log('Meta Pixel Purchase event sent with ID:', orderData.event_id);
+                console.log('Purchase value:', orderData.value, orderData.currency);
+
+                // Mark event as sent to prevent duplicates
+                localStorage.setItem('pixel_event_sent', 'true');
 
                 // Prepare Summary HTML
                 summaryHTML = `
@@ -60,15 +75,41 @@
                     </div>
                 `;
 
-                // Clear storage to prevent double tracking on reload
-                localStorage.removeItem('pixel_user_data');
-                localStorage.removeItem('pixel_order_data');
+            } catch (e) { console.error('Data Error', e); }
+        } else if (userDataStore && orderDataStore && eventSent === 'true') {
+            // Event already sent, just show summary without sending duplicate event
+            try {
+                const userData = JSON.parse(userDataStore);
+                const orderData = JSON.parse(orderDataStore);
+
+                console.log('Event already sent, skipping duplicate. Event ID:', orderData.event_id);
+
+                // Just init pixel without Purchase event
+                fbq('init', '898690175892128');
+                fbq('track', 'PageView');
+
+                // Prepare Summary HTML
+                summaryHTML = `
+                    <div class="summary-box">
+                        <h3>Sipariş Özeti</h3>
+                        <div class="summary-details">
+                            <div class="summary-row"><strong>Ad Soyad:</strong> ${userData.fn} ${userData.ln}</div>
+                            <div class="summary-row"><strong>Telefon:</strong> ${userData.ph}</div>
+                            <div class="summary-row"><strong>İl:</strong> ${userData.ct}</div>
+                            <div class="summary-row" style="font-size:12px; color:#666;"><strong>Adres:</strong> ${userData.ad || 'Belirtilmedi'}</div>
+                            <div class="summary-line"></div>
+                            <div class="summary-row"><strong>Paket:</strong> ${getPackageName(orderData.content_ids[0])}</div>
+                            ${orderData.shipping_cost > 0 ? `<div class="summary-row" style="font-size:12px;">Kargo: +${orderData.shipping_cost}TL</div>` : ''}
+                            <div class="summary-row total"><strong>Ödenecek Tutar:</strong> ${orderData.value}TL</div>
+                            <div class="summary-note">(Kapıda Nakit veya Kredi Kartı)</div>
+                        </div>
+                    </div>
+                `;
             } catch (e) { console.error('Data Error', e); }
         } else {
             // Fallback if no data (e.g. direct access)
             fbq('init', '898690175892128');
             fbq('track', 'PageView');
-            fbq('track', 'Purchase', { value: 0, currency: 'TRY' });
         }
 
         function getPackageName(id) {
