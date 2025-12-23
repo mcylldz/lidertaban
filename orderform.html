@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="orderform.css">
+</head>
+
+<body>
+    <img src="orderform.webp" alt="" class="header-image">
+
+    <div class="packages-container">
+        <!-- Package 1 - BAŞLANGIÇ PAKETİ -->
+        <div class="package" onclick="selectPackage(1)" id="package-1" data-items="1">
+            <div class="package-header orange">
+                <div class="package-title">1 Kutu 30'lu Retinage Maske</div>
+                <div class="package-badge">BAŞLANGIÇ PAKETİ ⭐</div>
+            </div>
+            <div class="package-content">
+                <div class="package-left">
+                    <div class="radio-circle"></div>
+                    <div class="package-image-placeholder">
+                        <img src="baslangic_new.png" alt="Baslangic Paketi" class="pkg-img">
+                    </div>
+                </div>
+                <div class="package-right">
+                    <div class="price-container">
+                        <div class="price-old">849TL</div>
+                        <div class="price-current">549TL</div>
+                    </div>
+                    <div class="shipping-fee">+60TL KARGO ÜCRETİ</div>
+                    <button class="btn-select">İndirimi Seçiniz</button>
+                    <button class="btn-active" style="display: none;">İndirim Aktif Edildi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Package 2 - AVANTAJ PAKETİ -->
+        <div class="package" onclick="selectPackage(2)" id="package-2" data-items="2">
+            <div class="package-header purple">
+                <div class="package-title">2 Kutu 30'lu Retinage Maske</div>
+                <div class="package-badge">AVANTAJ PAKETİ 💯</div>
+            </div>
+            <div class="package-content">
+                <div class="package-left">
+                    <div class="radio-circle"></div>
+                    <div class="package-image-placeholder">
+                        <img src="avantaj.png" alt="Avantaj Paketi" class="pkg-img">
+                    </div>
+                </div>
+                <div class="package-right">
+                    <div class="price-container">
+                        <div class="price-old">1398TL</div>
+                        <div class="price-current">869TL</div>
+                    </div>
+                    <div class="shipping-fee">+60TL KARGO ÜCRETİ</div>
+                    <button class="btn-select">İndirimi Seçiniz</button>
+                    <button class="btn-active" style="display: none;">İndirim Aktif Edildi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Package 3 - EN ÇOK TERCİH EDİLEN -->
+        <div class="package selected" onclick="selectPackage(3)" id="package-3" data-items="5">
+            <div class="package-header yellow">
+                <div class="package-title">4 Kutu 30'lu Retinage Maske + 1 Kutu Hediye!</div>
+                <div class="package-badge">EN ÇOK TERCİH EDİLEN 💖</div>
+            </div>
+            <div class="package-content">
+                <div class="package-left">
+                    <div class="radio-circle selected"></div>
+                    <div class="package-image-placeholder">
+                        <img src="encoktercih.png" alt="En Cok Tercih Edilen" class="pkg-img">
+                    </div>
+                </div>
+                <div class="package-right">
+                    <div class="price-container">
+                        <div class="price-old">2195TL</div>
+                        <div class="price-current">1.499TL</div>
+                    </div>
+                    <div class="shipping-free">KARGO BEDAVA</div>
+                    <button class="btn-select" style="display: none;">İndirimi Seçiniz</button>
+                    <button class="btn-active">İndirim Aktif Edildi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Section -->
+    <div class="warning-section">
+        <div class="warning-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-alert-triangle">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                </path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>Seçtiğiniz indirimli paketlerde stok bitmek üzere</span>
+        </div>
+        <div class="warning-content">
+            Son 1 saatte seçtiğiniz indirimli paketten <span id="sold-count" class="highlight-text">X</span> adet
+            satıldı. Talep fazlalığından dolayı; siparişi tamamlamanız için seçtiğiniz ürünler <span
+                class="highlight-text">5 dakikalığına</span> sizin için ayrıldı.
+        </div>
+    </div>
+
+    <!-- Order Form Section -->
+    <div class="order-form-container">
+        <div class="form-section-header">
+            <div class="form-header-title">KAPIDA ÖDEME İLE SİPARİŞİNİ OLUŞTUR</div>
+            <div class="form-header-subtitle">Kapıda kart yada nakit ödeme ile siparişini teslim alabilirsin.</div>
+        </div>
+        <form id="orderForm">
+            <!-- Dynamic Size Selector -->
+            <div id="size-selectors-container">
+                <!-- Will be populated by JS -->
+            </div>
+
+            <!-- Customer Info -->
+            <div class="form-group">
+                <label>İsim*</label>
+                <input type="text" id="name" name="name" placeholder="İsim" required>
+            </div>
+            <div class="form-group">
+                <label>Soyisim*</label>
+                <input type="text" id="surname" name="surname" placeholder="Soyisim" required>
+            </div>
+            <div class="form-group">
+                <label>Telefon*</label>
+                <input type="tel" id="phone" name="phone" placeholder="05XX XXX XX XX"
+                    pattern="05[0-9]{2}\s?[0-9]{3}\s?[0-9]{2}\s?[0-9]{2}" required>
+                <small>Numaranızı 05XX XXX XX XX formatında girmelisiniz!</small>
+            </div>
+            <div class="form-group">
+                <label>Adres*</label>
+                <textarea id="address" name="address" placeholder="Adres" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Şehir*</label>
+                <input type="text" id="city" name="city" placeholder="Şehir" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Siparişi Tamamla</button>
+        </form>
+    </div>
+
+    <!-- Bottom Features -->
+    <div class="features-section">
+        <div class="feature-item">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-truck">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+            </div>
+            <h3>AYNI GÜN KARGO</h3>
+            <p>Siparişiniz aynı gün kargoya verilmektedir. Max 3 iş günü içerisinde teslim edilmektedir.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-package">
+                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+            </div>
+            <h3>KAPIDA ÖDEME</h3>
+            <p>Sipariş verdiğiniz ürünleri kapıda ödeme avantajı ile nakit veya kredi kartlı ödemeyle teslim
+                alabilirsiniz.</p>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-rotate-ccw">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+            </div>
+            <h3>365 GÜN İADE</h3>
+            <p>Kullanıcılarımıza çok kolay ve hızlı iade süreci sözü veriyoruz.</p>
+        </div>
+    </div>
+
+    <script src="orderform.js"></script>
+</body>
+
+</html>
