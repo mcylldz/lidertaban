@@ -130,10 +130,13 @@ body {
 /* Image Placeholder - Transparent */
 .package-image-placeholder {
     width: 100%;
-    max-width: 180px;
-    height: 90%;
+    min-width: 140px;
+    /* Ensure minimum width */
+    max-width: 200px;
+    /* Increased from 180px */
+    height: 100px;
+    /* Increased height slightly */
     background-color: transparent;
-    /* Changed from #f9f9f9 */
     border-radius: 4px;
     background-size: contain;
     background-position: center;
@@ -149,7 +152,15 @@ body {
     height: 100%;
     object-fit: contain;
     mix-blend-mode: multiply;
-    /* Helps delete white bg if present */
+    transform: scale(1.15);
+    /* Slight zoom to fill more space visually */
+}
+
+/* Specific adjustments for packages if needed via ID or nth-child could go here, 
+   but global adjustment seems to fit "enlarge baseline" request */
+.package-content {
+    padding: 10px 15px;
+    /* Adjust padding to give more room */
 }
 
 /* Warning Section */

@@ -184,15 +184,27 @@ if (orderForm) {
         try {
             // Check for ENV variable if available
             const webhook = window.env?.WEBHOOK_URL || CONFIG.WEBHOOK_URL;
+            console.log('Attemping webhook submission to:', webhook);
 
-            // Fire and forget webhook or await it? Await to be safe.
+            // Attempt standard fetch first
+            // If it fails due to CORS, it might throw or just fail.
+            // Since n8n is often cross-origin, we try standard if we expect CORS headers,
+            // or 'no-cors' if we just want to fire-and-forget (opaque response).
+            // Usually n8n webhooks are set up to return 200 OK.
+            // If the user's n8n doesn't send CORS headers, standard fetch fails.
+
             await fetch(webhook, {
                 method: 'POST',
+                mode: 'no-cors', // Force no-cors to allow fire-and-forget even without server headers
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
+
+            // In no-cors mode, we can't check response.ok (it's opaque).
+            // We assume success if no network error was thrown.
+            console.log('Webhook request sent (opaque response).');
 
             // Always redirect on "success" flow for this demo even if webhook fails
             window.location.href = 'success.html';
