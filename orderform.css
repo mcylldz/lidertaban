@@ -184,52 +184,116 @@ body {
     padding-bottom: 15px;
 }
 
-.form-header-title {
+/* Right Side: 40% - Centered Content */
+.package-right {
+    flex: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    gap: 0px;
+    /* Reset, manage spacing specifically */
+}
+
+/* Price Row Container */
+.price-info-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 11px;
+}
+
+.new-price {
+    color: #1A1F2C;
     font-size: 16px;
     font-weight: 800;
-    color: #1A1F2C;
-    margin-bottom: 5px;
-    text-transform: uppercase;
 }
 
-.form-header-subtitle {
-    font-size: 12px;
+.shipping-info {
+    font-size: 10px;
     color: #666;
-    font-weight: 500;
+    margin-bottom: 6px;
 }
 
-/* Size Selector Styles */
-#size-selectors-container {
-    display: grid;
-    gap: 10px;
-}
-
-#size-selectors-container.grid-layout {
-    grid-template-columns: 1fr 1fr;
-    /* 2 columns */
-}
-
-.size-selector-group {
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #eee;
-    margin-bottom: 0;
-    /* Handled by grid gap */
-}
-
-.size-label {
-    font-size: 13px;
-    /* Increased from 12px */
+.shipping-info.free-shipping {
+    color: #2ecc71;
     font-weight: 700;
-    margin-bottom: 5px;
-    display: block;
 }
 
-.size-selector-group select {
-    font-size: 14px;
-    /* Logically readable size */
+/* Button Refinements */
+.btn-select,
+.btn-active {
+    width: 90%;
+    max-width: 140px;
+    padding: 6px 0;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    /* Prevent wrapping */
+}
+
+.btn-select {
+    background-color: transparent;
+    border: 1px solid #1A1F2C;
+    color: #1A1F2C;
+}
+
+.btn-active {
+    background-color: #5EEFA9;
+    border: none;
+    color: #1A1F2C;
+    animation: pulse 2s infinite;
+}
+
+/* Form Styles Fixes */
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1F2C;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
     padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+    /* Critical for preventing overflow */
+}
+
+.form-group textarea {
+    height: 80px;
+    resize: none;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #888;
 }
 
 /* Submit Button */

@@ -14,7 +14,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -23,33 +23,65 @@
         }(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
 
-        // Advanced Matching Logic
+        // Advanced Matching & Summary Logic
         const userDataStore = localStorage.getItem('pixel_user_data');
-        let userData = {};
-        if (userDataStore) {
-            try {
-                userData = JSON.parse(userDataStore);
-            } catch (e) { console.error('Pixel Data Error', e); }
-        }
-
-        fbq('init', '898690175892128', userData);
-        fbq('track', 'PageView');
-
-        // Track Purchase
         const orderDataStore = localStorage.getItem('pixel_order_data');
-        if (orderDataStore) {
+
+        // Define variable to hold summary HTML to inject later
+        let summaryHTML = '';
+
+        if (userDataStore && orderDataStore) {
             try {
+                const userData = JSON.parse(userDataStore);
                 const orderData = JSON.parse(orderDataStore);
+
+                // Pixel Init with Advanced Matching
+                fbq('init', '898690175892128', userData);
+                fbq('track', 'PageView');
+
+                // Pixel Purchase
                 fbq('track', 'Purchase', orderData);
 
-                // Clear storage after tracking to prevent double tracking on reload
+                // Prepare Summary HTML
+                summaryHTML = `
+                    <div class="summary-box">
+                        <h3>Sipariş Özeti</h3>
+                        <div class="summary-details">
+                            <div class="summary-row"><strong>Ad Soyad:</strong> ${userData.fn} ${userData.ln}</div>
+                            <div class="summary-row"><strong>Telefon:</strong> ${userData.ph}</div>
+                            <div class="summary-row"><strong>İl:</strong> ${userData.ct}</div>
+                            <div class="summary-line"></div>
+                            <div class="summary-row"><strong>Paket:</strong> ${getPackageName(orderData.content_ids[0])}</div>
+                            <div class="summary-row total"><strong>Ödenecek Tutar:</strong> ${orderData.value}TL</div>
+                            <div class="summary-note">(Kapıda Nakit veya Kredi Kartı)</div>
+                        </div>
+                    </div>
+                `;
+
+                // Clear storage to prevent double tracking on reload
                 localStorage.removeItem('pixel_user_data');
                 localStorage.removeItem('pixel_order_data');
-            } catch (e) { console.error('Pixel Order Error', e); }
+            } catch (e) { console.error('Data Error', e); }
         } else {
             // Fallback if no data (e.g. direct access)
+            fbq('init', '898690175892128');
+            fbq('track', 'PageView');
             fbq('track', 'Purchase', { value: 0, currency: 'TRY' });
         }
+
+        function getPackageName(id) {
+            if (String(id).includes('1')) return '1 Çift Lider Taban';
+            if (String(id).includes('2')) return '2 Çift Lider Taban';
+            if (String(id).includes('3')) return '3+1 Çift Lider Taban (4 Adet)';
+            return 'Standart Paket';
+        }
+
+        window.onload = function () {
+            const summaryContainer = document.getElementById('order-summary');
+            if (summaryContainer && summaryHTML) {
+                summaryContainer.innerHTML = summaryHTML;
+            }
+        };
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=898690175892128&ev=PageView&noscript=1" /></noscript>
@@ -63,7 +95,6 @@
             for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
             k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
         })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=105978631', 'ym');
-
         ym(105978631, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", accurateTrackBounce: true, trackLinks: true });
     </script>
     <noscript>
@@ -119,6 +150,48 @@
             font-weight: 600;
             display: inline-block;
         }
+
+        /* Summary Box Styles */
+        .summary-box {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .summary-box h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #1A1F2C;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .summary-row {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .summary-line {
+            height: 1px;
+            background: #ddd;
+            margin: 10px 0;
+        }
+
+        .summary-row.total {
+            font-size: 16px;
+            color: #000;
+        }
+
+        .summary-note {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -134,6 +207,9 @@
         <h1>Tebrikler!</h1>
         <p>Siparişiniz başarılı bir şekilde oluşturuldu. Whatsapp'dan tarafınıza ulaşıp teyit alındıktan sonra
             siparişinizi kargoya vereceğiz.</p>
+
+        <div id="order-summary"></div>
+
         <a href="index.html" class="btn">Ana Sayfaya Dön</a>
     </div>
 </body>
