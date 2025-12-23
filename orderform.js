@@ -1,9 +1,7 @@
 // Basic configuration
 const CONFIG = {
-    // Replace with actual webhook URL or inject via backend/env
-    // User requested Netlify env compatibility. In static site, usually requires 
-    // a funtion or build step. For now, using a placeholder.
-    WEBHOOK_URL: 'https://primary-production-424a.up.railway.app/webhook/order-submit' // Placeholder, user to change
+    // Webhook URL provided by user
+    WEBHOOK_URL: 'https://dtt1z7t3.rcsrv.com/webhook/liderorder'
 };
 
 let selectedPackageId = 3; // Default
