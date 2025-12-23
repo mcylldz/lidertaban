@@ -47,6 +47,17 @@ function selectPackage(id) {
         // 4. Update Order Form Size Selector
         const itemCount = parseInt(selectedPkg.getAttribute('data-items'));
         renderSizeSelectors(itemCount);
+
+        // 5. Smooth scroll to form section
+        setTimeout(() => {
+            const formContainer = document.querySelector('.order-form-container');
+            if (formContainer) {
+                formContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 300); // Small delay to ensure size selectors are rendered
     }
 }
 

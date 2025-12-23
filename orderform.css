@@ -481,7 +481,9 @@ body {
         font-size: 20px;
     }
 
+    /* Keep 2 columns on mobile for packages 2 and 3 */
     #size-selectors-container.grid-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 }
