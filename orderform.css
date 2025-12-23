@@ -20,7 +20,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    /* Reduced gap for compact look */
 }
 
 /* Package Card Styles */
@@ -45,7 +44,6 @@ body {
 .package-header {
     display: flex;
     min-height: 32px;
-    /* Reduced height */
 }
 
 .package-title {
@@ -54,7 +52,6 @@ body {
     padding: 8px 15px;
     font-weight: 700;
     font-size: 11px;
-    /* Updated to 11px */
     flex: 60%;
     display: flex;
     align-items: center;
@@ -64,7 +61,6 @@ body {
     padding: 8px 5px;
     font-weight: 800;
     font-size: 11px;
-    /* Updated to 11px */
     flex: 40%;
     display: flex;
     align-items: center;
@@ -131,11 +127,8 @@ body {
 .package-image-placeholder {
     width: 100%;
     min-width: 140px;
-    /* Ensure minimum width */
     max-width: 200px;
-    /* Increased from 180px */
     height: 100px;
-    /* Increased height slightly */
     background-color: transparent;
     border-radius: 4px;
     background-size: contain;
@@ -153,14 +146,10 @@ body {
     object-fit: contain;
     mix-blend-mode: multiply;
     transform: scale(1.15);
-    /* Slight zoom to fill more space visually */
 }
 
-/* Specific adjustments for packages if needed via ID or nth-child could go here, 
-   but global adjustment seems to fit "enlarge baseline" request */
 .package-content {
     padding: 10px 15px;
-    /* Adjust padding to give more room */
 }
 
 /* Warning Section */
@@ -169,19 +158,17 @@ body {
     border: 1px solid #FFEEBA;
     color: #856404;
     padding: 10px 15px;
-    /* Reduced padding */
     border-radius: 8px;
     margin-top: 10px;
-    /* Reduced from 20px */
     font-size: 13px;
 }
 
 /* Form Section Header */
 .form-section-header {
     text-align: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 /* Right Side: 40% - Centered Content */
@@ -194,7 +181,6 @@ body {
     text-align: center;
     height: 100%;
     gap: 0px;
-    /* Reset, manage spacing specifically */
 }
 
 /* Price Row Container */
@@ -243,7 +229,6 @@ body {
     text-transform: uppercase;
     text-align: center;
     white-space: nowrap;
-    /* Prevent wrapping */
 }
 
 .btn-select {
@@ -259,74 +244,195 @@ body {
     animation: pulse 2s infinite;
 }
 
-/* Form Styles Fixes */
+/* ============================================
+   MODERN DARK ORDER FORM SECTION
+   ============================================ */
+
+.order-form-container {
+    background: linear-gradient(135deg, #1A2332 0%, #243447 100%);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    margin: 30px auto;
+    max-width: 800px;
+}
+
+.form-header-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.form-header-subtitle {
+    font-size: 14px;
+    color: #B8C5D6;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Size Selectors Container */
+#size-selectors-container {
+    margin-bottom: 30px;
+}
+
+#size-selectors-container.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+/* Individual Size Selector */
+.size-selector-group {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.size-selector-group:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(94, 239, 169, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(94, 239, 169, 0.1);
+}
+
+.size-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 10px;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+}
+
+.size-selector-group select {
+    width: 100%;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.size-selector-group select:focus {
+    outline: none;
+    border-color: #5EEFA9;
+    background: rgba(94, 239, 169, 0.05);
+    box-shadow: 0 0 0 3px rgba(94, 239, 169, 0.1);
+}
+
+.size-selector-group select option {
+    background: #1A2332;
+    color: #FFFFFF;
+    padding: 10px;
+}
+
+/* Form Groups */
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-size: 13px;
     font-weight: 600;
-    color: #1A1F2C;
+    color: #E2E8F0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    font-size: 15px;
     font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
-    /* Critical for preventing overflow */
+    color: #FFFFFF;
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #64748B;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #5EEFA9;
+    background: rgba(94, 239, 169, 0.05);
+    box-shadow: 0 0 0 3px rgba(94, 239, 169, 0.1);
 }
 
 .form-group textarea {
-    height: 80px;
-    resize: none;
+    height: 100px;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .form-group small {
     display: block;
-    margin-top: 4px;
-    font-size: 10px;
-    color: #888;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #94A3B8;
+    font-style: italic;
 }
 
 /* Submit Button */
 .btn-submit {
     width: 100%;
-    background-color: #5EEFA9;
-    /* Green from design */
-    color: #1A1F2C;
-    padding: 15px;
+    background: linear-gradient(135deg, #5EEFA9 0%, #4DD396 100%);
+    color: #1A2332;
+    padding: 18px;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 800;
     border: none;
-    border-radius: 25px;
+    border-radius: 12px;
     cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 4px 15px rgba(94, 239, 169, 0.4);
-    transition: transform 0.1s;
-    max-width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 6px 20px rgba(94, 239, 169, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .btn-submit:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(94, 239, 169, 0.6);
 }
 
 .btn-submit:active {
-    transform: scale(0.98);
+    transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Features Section */
 .features-section {
     display: flex;
     justify-content: space-between;
-    /* Creates columns */
     margin-top: 40px;
     padding-top: 20px;
     border-top: 1px solid #ddd;
@@ -364,5 +470,18 @@ body {
     .features-section {
         flex-direction: column;
         gap: 25px;
+    }
+
+    .order-form-container {
+        padding: 30px 20px;
+        border-radius: 12px;
+    }
+
+    .form-header-title {
+        font-size: 20px;
+    }
+
+    #size-selectors-container.grid-layout {
+        grid-template-columns: 1fr;
     }
 }
