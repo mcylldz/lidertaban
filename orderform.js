@@ -187,14 +187,15 @@ if (orderForm) {
 
         // Price Logic
         if (selectedPackageId == 1) {
-            orderDetails.value = 549 + 60;
+            orderDetails.value = 999 + 60;
             orderDetails.shipping_cost = 60;
         }
         else if (selectedPackageId == 2) {
-            orderDetails.value = 869;
+            orderDetails.value = 1499 + 60;
+            orderDetails.shipping_cost = 60;
         }
         else if (selectedPackageId == 3) {
-            orderDetails.value = 1499;
+            orderDetails.value = 1799;
         }
 
         // Generate unique event_id for Meta Pixel deduplication
