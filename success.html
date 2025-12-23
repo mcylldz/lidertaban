@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siparişiniz Alındı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+
+        // Advanced Matching & Summary Logic
+        const userDataStore = localStorage.getItem('pixel_user_data');
+        const orderDataStore = localStorage.getItem('pixel_order_data');
+
+        // Define variable to hold summary HTML to inject later
+        let summaryHTML = '';
+
+        if (userDataStore && orderDataStore) {
+            try {
+                const userData = JSON.parse(userDataStore);
+                const orderData = JSON.parse(orderDataStore);
+
+                // Pixel Init with Advanced Matching
+                fbq('init', '898690175892128', userData);
+                fbq('track', 'PageView');
+
+                // Pixel Purchase
+                fbq('track', 'Purchase', orderData);
+
+                // Prepare Summary HTML
+                summaryHTML = `
+                    <div class="summary-box">
+                        <h3>Sipariş Özeti</h3>
+                        <div class="summary-details">
+                            <div class="summary-row"><strong>Ad Soyad:</strong> ${userData.fn} ${userData.ln}</div>
+                            <div class="summary-row"><strong>Telefon:</strong> ${userData.ph}</div>
+                            <div class="summary-row"><strong>İl:</strong> ${userData.ct}</div>
+                            <div class="summary-row" style="font-size:12px; color:#666;"><strong>Adres:</strong> ${userData.ad || 'Belirtilmedi'}</div>
+                            <div class="summary-line"></div>
+                            <div class="summary-row"><strong>Paket:</strong> ${getPackageName(orderData.content_ids[0])}</div>
+                            ${orderData.shipping_cost > 0 ? `<div class="summary-row" style="font-size:12px;">Kargo: +${orderData.shipping_cost}TL</div>` : ''}
+                            <div class="summary-row total"><strong>Ödenecek Tutar:</strong> ${orderData.value}TL</div>
+                            <div class="summary-note">(Kapıda Nakit veya Kredi Kartı)</div>
+                        </div>
+                    </div>
+                `;
+
+                // Clear storage to prevent double tracking on reload
+                localStorage.removeItem('pixel_user_data');
+                localStorage.removeItem('pixel_order_data');
+            } catch (e) { console.error('Data Error', e); }
+        } else {
+            // Fallback if no data (e.g. direct access)
+            fbq('init', '898690175892128');
+            fbq('track', 'PageView');
+            fbq('track', 'Purchase', { value: 0, currency: 'TRY' });
+        }
+
+        function getPackageName(id) {
+            if (String(id).includes('1')) return '1 Çift Lider Taban';
+            if (String(id).includes('2')) return '2 Çift Lider Taban';
+            if (String(id).includes('3')) return '3+1 Çift Lider Taban +1 Hediye (4 Adet)';
+            return 'Standart Paket';
+        }
+
+        window.onload = function () {
+            const summaryContainer = document.getElementById('order-summary');
+            if (summaryContainer && summaryHTML) {
+                summaryContainer.innerHTML = summaryHTML;
+            }
+        };
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=898690175892128&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (m, e, t, r, i, k, a) {
+            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+            m[i].l = 1 * new Date();
+            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=105978631', 'ym');
+        ym(105978631, 'init', { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", accurateTrackBounce: true, trackLinks: true });
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/105978631" style="position:absolute; left:-9999px;" alt="" /></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .icon {
+            color: #5EEFA9;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #1A1F2C;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background-color: #000;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Summary Box Styles */
+        .summary-box {
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .summary-box h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #1A1F2C;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .summary-row {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .summary-line {
+            height: 1px;
+            background: #ddd;
+            margin: 10px 0;
+        }
+
+        .summary-row.total {
+            font-size: 16px;
+            color: #000;
+        }
+
+        .summary-note {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <h1>Tebrikler!</h1>
+        <p>Siparişiniz başarılı bir şekilde oluşturuldu. Whatsapp'dan tarafınıza ulaşıp teyit alındıktan sonra
+            siparişinizi kargoya vereceğiz.</p>
+
+        <div id="order-summary"></div>
+
+        <a href="index.html" class="btn">Ana Sayfaya Dön</a>
+    </div>
+</body>
+
+</html>
