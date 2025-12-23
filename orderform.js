@@ -158,25 +158,35 @@ if (orderForm) {
         data.package_id = selectedPackageId;
         data.timestamp = new Date().toISOString();
 
-        // 1. Save User Data for Purchase Event in Success Page (Advanced Matching)
+        // 1. Save User Data (Advanced Matching) & Order Details for Summary
         const userData = {
             fn: data.name, // first name
             ln: data.surname, // last name
             ph: data.phone.replace(/\s/g, ''), // phone normalized
             ct: data.city, // city
-            country: 'tr' // hardcoded assuming TR
-        };
-        const orderDetails = {
-            value: 0, // Should be dynamic based on package, but leaving 0 or passing actual price
-            currency: 'TRY',
-            content_ids: [`package_${selectedPackageId}`],
-            content_type: 'product'
+            country: 'tr', // hardcoded assuming TR
+            ad: data.address // address for summary
         };
 
-        // Quick price lookup
-        if (selectedPackageId == 1) orderDetails.value = 549; // +60 shipping?
-        if (selectedPackageId == 2) orderDetails.value = 869;
-        if (selectedPackageId == 3) orderDetails.value = 1499;
+        const orderDetails = {
+            value: 0,
+            currency: 'TRY',
+            content_ids: [`package_${selectedPackageId}`],
+            content_type: 'product',
+            shipping_cost: 0
+        };
+
+        // Price Logic
+        if (selectedPackageId == 1) {
+            orderDetails.value = 549 + 60;
+            orderDetails.shipping_cost = 60;
+        }
+        else if (selectedPackageId == 2) {
+            orderDetails.value = 869;
+        }
+        else if (selectedPackageId == 3) {
+            orderDetails.value = 1499;
+        }
 
         localStorage.setItem('pixel_user_data', JSON.stringify(userData));
         localStorage.setItem('pixel_order_data', JSON.stringify(orderDetails));
@@ -186,32 +196,22 @@ if (orderForm) {
             const webhook = window.env?.WEBHOOK_URL || CONFIG.WEBHOOK_URL;
             console.log('Attemping webhook submission to:', webhook);
 
-            // Attempt standard fetch first
-            // If it fails due to CORS, it might throw or just fail.
-            // Since n8n is often cross-origin, we try standard if we expect CORS headers,
-            // or 'no-cors' if we just want to fire-and-forget (opaque response).
-            // Usually n8n webhooks are set up to return 200 OK.
-            // If the user's n8n doesn't send CORS headers, standard fetch fails.
-
+            // Standard FETCH (JSON)
             await fetch(webhook, {
                 method: 'POST',
-                mode: 'no-cors', // Force no-cors to allow fire-and-forget even without server headers
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(data)
             });
 
-            // In no-cors mode, we can't check response.ok (it's opaque).
-            // We assume success if no network error was thrown.
-            console.log('Webhook request sent (opaque response).');
-
-            // Always redirect on "success" flow for this demo even if webhook fails
+            console.log('Webhook success.');
             window.location.href = 'success.html';
 
         } catch (error) {
             console.error('Submission Error:', error);
-            // Proceed to success page anyway to complete the funnel flow for the user
+            // Fallback to success page
             window.location.href = 'success.html';
         } finally {
             submitBtn.innerText = originalText;
