@@ -1,0 +1,9 @@
+{
+  "name": "lidertaban",
+  "version": "1.0.0",
+  "description": "Lider Taban - Akupresür Tabanlık Online Satış",
+  "private": true,
+  "dependencies": {
+    "stripe": "^14.12.0"
+  }
+}
