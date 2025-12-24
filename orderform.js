@@ -54,9 +54,6 @@ function initializeStripe() {
     }
 }
 
-// Make selectPackage globally accessible for HTML onclick handlers
-window.selectPackage = selectPackage;
-
 function selectPackage(id) {
     selectedPackageId = id;
 
@@ -135,6 +132,9 @@ function selectPackage(id) {
 
     updateSubmitButton();
 }
+
+// Make selectPackage globally accessible for HTML onclick handlers
+window.selectPackage = selectPackage;
 
 function updateStockCount() {
     // Generates random number between 94 and 213 (inclusive)
