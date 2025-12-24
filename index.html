@@ -50,7 +50,7 @@
     <a href="orderform.html"><img src="03.webp" alt=""></a>
     <img src="04.webp" alt="">
     <img src="05.webp" alt="">
-    <video src="TV.mp4" autoplay loop muted playsinline></video>
+    <video src="TV.mp4#t=0.001" preload="auto" autoplay loop muted playsinline webkit-playsinline></video>
     <img src="06.webp" alt="">
     <img src="07.webp" alt="">
     <img src="08.webp" alt="">
@@ -62,8 +62,8 @@
     <img src="14.webp" alt="">
     <div class="video-container"
         style="position: relative; width: 100%; height: auto; display: block; margin: 0; padding: 0;">
-        <video id="feature-video-dt" src="DT.mp4" playsinline
-            style="width: 100%; display: block; margin: 0; padding: 0;"></video>
+        <video id="feature-video-dt" src="DT.mp4#t=0.001" preload="metadata" playsinline webkit-playsinline
+            style="width: 100%; display: block; margin: 0; padding: 0; background: transparent;"></video>
         <div id="play-btn-dt"
             style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background-color: #321f77; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0.9; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 10;">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="white"
@@ -74,31 +74,38 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // DT Video Logic (Click to Play)
             const videoDt = document.getElementById('feature-video-dt');
             const btnDt = document.getElementById('play-btn-dt');
 
             if (videoDt && btnDt) {
+                // Force thumbnail load
+                videoDt.addEventListener('loadedmetadata', function () {
+                    this.currentTime = 0.1;
+                });
+
                 btnDt.addEventListener('click', function () {
                     videoDt.play().then(() => {
                         btnDt.style.opacity = '0';
                         btnDt.style.pointerEvents = 'none';
-                    }).catch(e => console.error(e));
+                    }).catch(e => console.error("Play error:", e));
                 });
 
                 videoDt.addEventListener('ended', function () {
                     btnDt.style.opacity = '0.9';
                     btnDt.style.pointerEvents = 'auto';
+                    // Optional: reset validation or state
+                    videoDt.currentTime = 0.1;
                 });
+            }
 
-                // Show button if video is paused (initial state)
-                videoDt.addEventListener('pause', function () {
-                    if (!videoDt.ended && videoDt.currentTime > 0) {
-                        // Optional: keep hidden if just paused by user interaction? 
-                        // User asked: "bitince tekrar basma butonu aktif olsun". 
-                        // Doesn't specify pause behavior. Standard is usually show button on pause.
-                        // But for "plays once", maybe only show on end.
-                        // I will stick to "bitince tekrar basma butonu aktif olsun" -> ONLY on ended.
-                    }
+            // TV Loop Video Logic (Autoplay)
+            const tvVideo = document.querySelector('video[src*="TV.mp4"]');
+            if (tvVideo) {
+                tvVideo.play().catch(e => {
+                    console.log("TV Autoplay failed:", e);
+                    tvVideo.muted = true; // Ensure muted
+                    tvVideo.play();
                 });
             }
         });
