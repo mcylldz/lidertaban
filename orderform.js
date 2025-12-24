@@ -11,8 +11,13 @@ let cardElement = null;
 let cardComplete = false;
 
 // Initialize Stripe
+// Initialize Stripe
 function initializeStripe() {
-    const publishableKey = import.meta?.env?.VITE_STRIPE_PUBLISHABLE_KEY;
+    // Note: In a raw HTML environment without Vite, import.meta.env causes a SyntaxError.
+    // We try to get the key from potential global variables or fallback.
+    const publishableKey = window.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx'; // Fallback / Placeholder
+
+    console.log("OrderForm JS initialized. Stripe Key:", publishableKey ? "Found" : "Missing");
 
     if (publishableKey) {
         stripe = Stripe(publishableKey);

@@ -501,7 +501,8 @@ body {
 }
 
 .payment-option.selected .payment-option-radio .radio-dot {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1) !important;
+    background-color: #5EEFA9;
 }
 
 .payment-option-content {
