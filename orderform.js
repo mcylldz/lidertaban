@@ -54,6 +54,9 @@ function initializeStripe() {
     }
 }
 
+// Make selectPackage globally accessible for HTML onclick handlers
+window.selectPackage = selectPackage;
+
 function selectPackage(id) {
     selectedPackageId = id;
 
