@@ -58,6 +58,10 @@
                 localStorage.setItem('pixel_event_sent', 'true');
 
                 // Prepare Summary HTML
+                const paymentMethodText = orderData.payment_method === 'online'
+                    ? '(Online Ödeme ile Ödendi)'
+                    : '(Kapıda Nakit veya Kredi Kartı)';
+
                 summaryHTML = `
                     <div class="summary-box">
                         <h3>Sipariş Özeti</h3>
@@ -70,7 +74,8 @@
                             <div class="summary-row"><strong>Paket:</strong> ${getPackageName(orderData.content_ids[0])}</div>
                             ${orderData.shipping_cost > 0 ? `<div class="summary-row" style="font-size:12px;">Kargo: +${orderData.shipping_cost}TL</div>` : ''}
                             <div class="summary-row total"><strong>Ödenecek Tutar:</strong> ${orderData.value}TL</div>
-                            <div class="summary-note">(Kapıda Nakit veya Kredi Kartı)</div>
+                            <div class="summary-note">${paymentMethodText}</div>
+                            ${orderData.stripe_payment_id ? `<div class="summary-row" style="font-size:11px; color:#888; margin-top:8px;">Ödeme ID: ${orderData.stripe_payment_id}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -89,6 +94,10 @@
                 fbq('track', 'PageView');
 
                 // Prepare Summary HTML
+                const paymentMethodText = orderData.payment_method === 'online'
+                    ? '(Online Ödeme ile Ödendi)'
+                    : '(Kapıda Nakit veya Kredi Kartı)';
+
                 summaryHTML = `
                     <div class="summary-box">
                         <h3>Sipariş Özeti</h3>
@@ -101,7 +110,8 @@
                             <div class="summary-row"><strong>Paket:</strong> ${getPackageName(orderData.content_ids[0])}</div>
                             ${orderData.shipping_cost > 0 ? `<div class="summary-row" style="font-size:12px;">Kargo: +${orderData.shipping_cost}TL</div>` : ''}
                             <div class="summary-row total"><strong>Ödenecek Tutar:</strong> ${orderData.value}TL</div>
-                            <div class="summary-note">(Kapıda Nakit veya Kredi Kartı)</div>
+                            <div class="summary-note">${paymentMethodText}</div>
+                            ${orderData.stripe_payment_id ? `<div class="summary-row" style="font-size:11px; color:#888; margin-top:8px;">Ödeme ID: ${orderData.stripe_payment_id}</div>` : ''}
                         </div>
                     </div>
                 `;

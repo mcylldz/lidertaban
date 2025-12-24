@@ -4,7 +4,55 @@ const CONFIG = {
     WEBHOOK_URL: 'https://dtt1z7t3.rcsrv.com/webhook/liderorder'
 };
 
-let selectedPackageId = 3; // Default
+let selectedPackageId = null; // No default selection
+let selectedPaymentMethod = null; // 'cod' or 'online'
+let stripe = null;
+let cardElement = null;
+let cardComplete = false;
+
+// Initialize Stripe
+function initializeStripe() {
+    const publishableKey = import.meta?.env?.VITE_STRIPE_PUBLISHABLE_KEY;
+
+    if (publishableKey) {
+        stripe = Stripe(publishableKey);
+        const elements = stripe.elements();
+
+        // Create card element with custom styling
+        cardElement = elements.create('card', {
+            style: {
+                base: {
+                    color: '#FFFFFF',
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '15px',
+                    '::placeholder': {
+                        color: '#64748B'
+                    }
+                },
+                invalid: {
+                    color: '#EF4444',
+                    iconColor: '#EF4444'
+                }
+            }
+        });
+
+        // Listen for card input changes
+        cardElement.on('change', function (event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+                cardComplete = false;
+            } else {
+                displayError.textContent = '';
+                cardComplete = event.complete;
+            }
+            updateSubmitButton();
+        });
+    } else {
+        console.warn('Stripe publishable key not found. Online payment will not be available.');
+    }
+}
 
 function selectPackage(id) {
     selectedPackageId = id;
@@ -48,17 +96,41 @@ function selectPackage(id) {
         const itemCount = parseInt(selectedPkg.getAttribute('data-items'));
         renderSizeSelectors(itemCount);
 
-        // 5. Smooth scroll to form section
+        // 5. Smooth and slow scroll to form section
         setTimeout(() => {
             const formContainer = document.querySelector('.order-form-container');
             if (formContainer) {
-                formContainer.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                // Get the position
+                const formPosition = formContainer.getBoundingClientRect().top + window.pageYOffset;
+                const startPosition = window.pageYOffset;
+                const distance = formPosition - startPosition;
+                const duration = 1000; // 1 second for smooth scroll
+                let start = null;
+
+                // Easing function for smooth animation
+                function easeInOutCubic(t) {
+                    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+                }
+
+                function animation(currentTime) {
+                    if (start === null) start = currentTime;
+                    const timeElapsed = currentTime - start;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    const ease = easeInOutCubic(progress);
+
+                    window.scrollTo(0, startPosition + distance * ease);
+
+                    if (timeElapsed < duration) {
+                        requestAnimationFrame(animation);
+                    }
+                }
+
+                requestAnimationFrame(animation);
             }
-        }, 300); // Small delay to ensure size selectors are rendered
+        }, 200);
     }
+
+    updateSubmitButton();
 }
 
 function updateStockCount() {
@@ -127,6 +199,74 @@ function renderSizeSelectors(count) {
     }
 }
 
+// Payment Method Selection
+function setupPaymentMethodSelection() {
+    const codOption = document.getElementById('payment-cod');
+    const onlineOption = document.getElementById('payment-online');
+    const stripeContainer = document.getElementById('stripe-card-container');
+
+    if (codOption) {
+        codOption.addEventListener('click', () => {
+            selectedPaymentMethod = 'cod';
+            codOption.classList.add('selected');
+            onlineOption.classList.remove('selected');
+            stripeContainer.style.display = 'none';
+
+            // Unmount card element if it was mounted
+            if (cardElement && cardElement._parent) {
+                cardElement.unmount();
+            }
+
+            cardComplete = false;
+            updateSubmitButton();
+        });
+    }
+
+    if (onlineOption) {
+        onlineOption.addEventListener('click', () => {
+            if (!stripe) {
+                alert('Online ödeme şu anda kullanılamıyor. Lütfen kapıda ödeme seçeneğini kullanın.');
+                return;
+            }
+
+            selectedPaymentMethod = 'online';
+            onlineOption.classList.add('selected');
+            codOption.classList.remove('selected');
+            stripeContainer.style.display = 'block';
+
+            // Mount card element if not already mounted
+            if (cardElement && !cardElement._parent) {
+                cardElement.mount('#card-element');
+            }
+
+            updateSubmitButton();
+        });
+    }
+}
+
+// Update submit button state
+function updateSubmitButton() {
+    const submitBtn = document.querySelector('.btn-submit');
+    if (!submitBtn) return;
+
+    // Enable button if:
+    // 1. A package is selected AND
+    // 2. (COD is selected OR (Online is selected AND card is complete))
+    const shouldEnable = selectedPackageId !== null &&
+        (selectedPaymentMethod === 'cod' ||
+            (selectedPaymentMethod === 'online' && cardComplete));
+
+    submitBtn.disabled = !shouldEnable;
+}
+
+// Get package price
+function getPackagePrice(packageId) {
+    if (packageId == 1) return { total: 1059, base: 999, shipping: 60 };
+    if (packageId == 2) return { total: 1559, base: 1499, shipping: 60 };
+    if (packageId == 3) return { total: 1799, base: 1799, shipping: 0 };
+    return { total: 0, base: 0, shipping: 0 };
+}
+
 // Phone formatting logic
 const phoneInput = document.getElementById('phone');
 if (phoneInput) {
@@ -154,6 +294,11 @@ if (orderForm) {
     orderForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
+        if (!selectedPackageId || !selectedPaymentMethod) {
+            alert('Lütfen bir paket ve ödeme yöntemi seçin.');
+            return;
+        }
+
         const submitBtn = document.querySelector('.btn-submit');
         const originalText = submitBtn.innerText;
         submitBtn.innerText = 'İşleniyor...';
@@ -163,55 +308,92 @@ if (orderForm) {
         const formData = new FormData(orderForm);
         const data = Object.fromEntries(formData.entries());
 
-        // Add minimal metadata
+        // Add metadata
         data.package_id = selectedPackageId;
+        data.payment_method = selectedPaymentMethod;
         data.timestamp = new Date().toISOString();
 
-        // 1. Save User Data (Advanced Matching) & Order Details for Summary
+        // Get pricing
+        const pricing = getPackagePrice(selectedPackageId);
+
+        // User Data for Advanced Matching
         const userData = {
-            fn: data.name, // first name
-            ln: data.surname, // last name
-            ph: data.phone.replace(/\s/g, ''), // phone normalized
-            ct: data.city, // city
-            country: 'tr', // hardcoded assuming TR
-            ad: data.address // address for summary
+            fn: data.name,
+            ln: data.surname,
+            ph: data.phone.replace(/\s/g, ''),
+            ct: data.city,
+            country: 'tr',
+            ad: data.address
         };
 
         const orderDetails = {
-            value: 0,
+            value: pricing.total,
             currency: 'TRY',
             content_ids: [`package_${selectedPackageId}`],
             content_type: 'product',
-            shipping_cost: 0
+            shipping_cost: pricing.shipping,
+            payment_method: selectedPaymentMethod
         };
 
-        // Price Logic
-        if (selectedPackageId == 1) {
-            orderDetails.value = 999 + 60;
-            orderDetails.shipping_cost = 60;
-        }
-        else if (selectedPackageId == 2) {
-            orderDetails.value = 1499 + 60;
-            orderDetails.shipping_cost = 60;
-        }
-        else if (selectedPackageId == 3) {
-            orderDetails.value = 1799;
-        }
-
-        // Generate unique event_id for Meta Pixel deduplication
+        // Generate unique event_id
         const eventId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         orderDetails.event_id = eventId;
 
-        localStorage.setItem('pixel_user_data', JSON.stringify(userData));
-        localStorage.setItem('pixel_order_data', JSON.stringify(orderDetails));
-        localStorage.setItem('pixel_event_sent', 'false'); // Flag to track if event was sent
-
         try {
-            // Check for ENV variable if available
-            const webhook = window.env?.WEBHOOK_URL || CONFIG.WEBHOOK_URL;
-            console.log('Attemping webhook submission to:', webhook);
+            if (selectedPaymentMethod === 'online') {
+                // Process Stripe payment
+                submitBtn.innerText = 'Ödeme işleniyor...';
 
-            // Standard FETCH (JSON)
+                // Create payment intent
+                const paymentIntentResponse = await fetch('/.netlify/functions/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: pricing.total,
+                        packageId: selectedPackageId
+                    })
+                });
+
+                if (!paymentIntentResponse.ok) {
+                    throw new Error('Ödeme hazırlanamadı.');
+                }
+
+                const { clientSecret } = await paymentIntentResponse.json();
+
+                // Confirm card payment
+                const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: `${data.name} ${data.surname}`,
+                            phone: data.phone.replace(/\s/g, '')
+                        }
+                    }
+                });
+
+                if (stripeError) {
+                    throw new Error(stripeError.message);
+                }
+
+                if (paymentIntent.status === 'succeeded') {
+                    // Payment successful, add payment ID to data
+                    data.stripe_payment_id = paymentIntent.id;
+                    data.payment_status = 'paid';
+                } else {
+                    throw new Error('Ödeme tamamlanamadı.');
+                }
+            } else {
+                // Cash on delivery
+                data.payment_status = 'pending';
+            }
+
+            // Save data to localStorage  for success page
+            localStorage.setItem('pixel_user_data', JSON.stringify(userData));
+            localStorage.setItem('pixel_order_data', JSON.stringify(orderDetails));
+            localStorage.setItem('pixel_event_sent', 'false');
+
+            // Send order to webhook
+            const webhook = window.env?.WEBHOOK_URL || CONFIG.WEBHOOK_URL;
             await fetch(webhook, {
                 method: 'POST',
                 headers: {
@@ -221,22 +403,27 @@ if (orderForm) {
                 body: JSON.stringify(data)
             });
 
-            console.log('Webhook success.');
+            console.log('Order submitted successfully.');
             window.location.href = 'success.html';
 
         } catch (error) {
             console.error('Submission Error:', error);
-            // Fallback to success page
-            window.location.href = 'success.html';
-        } finally {
+            alert(`Hata: ${error.message || 'Bir hata oluştu. Lütfen tekrar deneyin.'}`);
             submitBtn.innerText = originalText;
             submitBtn.disabled = false;
         }
     });
 }
 
-// Initialize default state (Pack 3 selected as per HTML default)
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure the visual state matches the static HTML default
-    selectPackage(3);
+    // Initialize Stripe
+    initializeStripe();
+
+    // Setup payment method selection
+    setupPaymentMethodSelection();
+
+    // Don't select any package by default - user must choose
+    // Just render empty size selector
+    renderSizeSelectors(0);
 });

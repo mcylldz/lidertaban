@@ -415,19 +415,146 @@ body {
     letter-spacing: 1px;
 }
 
-.btn-submit:hover {
+.btn-submit:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 8px 30px rgba(94, 239, 169, 0.6);
 }
 
-.btn-submit:active {
+.btn-submit:active:not(:disabled) {
     transform: translateY(-1px);
 }
 
 .btn-submit:disabled {
-    opacity: 0.6;
+    opacity: 0.4;
     cursor: not-allowed;
+    background: linear-gradient(135deg, #64748B 0%, #475569 100%);
+    box-shadow: none;
 }
+
+/* Payment Methods Section */
+.payment-methods {
+    margin: 30px 0 20px;
+}
+
+.payment-method-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #E2E8F0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+}
+
+/* Payment Option Cards */
+.payment-option {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(94, 239, 169, 0.3);
+    transform: translateY(-2px);
+}
+
+.payment-option.selected {
+    background: rgba(94, 239, 169, 0.1);
+    border-color: #5EEFA9;
+    box-shadow: 0 4px 15px rgba(94, 239, 169, 0.2);
+}
+
+.payment-option-radio {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.payment-option.selected .payment-option-radio {
+    border-color: #5EEFA9;
+}
+
+.payment-option-radio .radio-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #5EEFA9;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s ease;
+}
+
+.payment-option.selected .payment-option-radio .radio-dot {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.payment-option-content {
+    flex: 1;
+}
+
+.payment-option-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+}
+
+.payment-option-subtitle {
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.4;
+}
+
+/* Stripe Card Container */
+#stripe-card-container {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Stripe Card Element Styling */
+#card-element {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+}
+
+#card-element.StripeElement--focus {
+    border-color: #5EEFA9;
+    background: rgba(94, 239, 169, 0.05);
+    box-shadow: 0 0 0 3px rgba(94, 239, 169, 0.1);
+}
+
+#card-element.StripeElement--invalid {
+    border-color: #EF4444;
+}
+
+/* Card Error Messages */
+#card-errors {
+    color: #EF4444;
+    font-size: 12px;
+    margin-top: 8px;
+    min-height: 20px;
+    font-weight: 500;
+}
+
 
 /* Features Section */
 .features-section {

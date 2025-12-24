@@ -46,6 +46,10 @@
     </noscript>
     <!-- /Yandex.Metrika counter -->
 
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
 <body>
     <img src="orderform.webp" alt="" class="header-image">
 
@@ -101,14 +105,14 @@
         </div>
 
         <!-- Package 3 - EN ÇOK TERCİH EDİLEN -->
-        <div class="package selected" onclick="selectPackage(3)" id="package-3" data-items="4">
+        <div class="package" onclick="selectPackage(3)" id="package-3" data-items="4">
             <div class="package-header yellow">
                 <div class="package-title">3 Çift Lider Taban Akupresür Tabanlık +1 Çift Hediye</div>
                 <div class="package-badge">EN ÇOK TERCİH EDİLEN 🚀</div>
             </div>
             <div class="package-content">
                 <div class="package-left">
-                    <div class="radio-circle selected"></div>
+                    <div class="radio-circle"></div>
                     <div class="package-image-placeholder">
                         <img src="encoktercihv3.png" alt="En Cok Tercih Edilen" class="pkg-img"
                             style="transform: scale(0.9);">
@@ -120,8 +124,8 @@
                         <span class="new-price">1799.00TL</span>
                     </div>
                     <div class="shipping-info free-shipping">Kargo Bedava</div>
-                    <button class="btn-select" style="display: none;">SEÇ</button>
-                    <button class="btn-active">İNDİRİM AKTİF EDİLDİ</button>
+                    <button class="btn-select">SEÇ</button>
+                    <button class="btn-active" style="display: none;">İNDİRİM AKTİF EDİLDİ</button>
                 </div>
             </div>
         </div>
@@ -183,7 +187,42 @@
                 <input type="text" id="city" name="city" placeholder="Şehir" required>
             </div>
 
-            <button type="submit" class="btn-submit">Siparişi Tamamla</button>
+            <!-- Payment Method Selection -->
+            <div class="payment-methods">
+                <div class="payment-method-header">Ödeme Yöntemi Seçiniz*</div>
+
+                <div class="payment-option" id="payment-cod" data-method="cod">
+                    <div class="payment-option-radio">
+                        <div class="radio-dot"></div>
+                    </div>
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">Kapıda Ödeme</div>
+                        <div class="payment-option-subtitle">Kapıda Kart yada Nakit ile ödeme</div>
+                    </div>
+                </div>
+
+                <div class="payment-option" id="payment-online" data-method="online">
+                    <div class="payment-option-radio">
+                        <div class="radio-dot"></div>
+                    </div>
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">Online Ödeme</div>
+                        <div class="payment-option-subtitle">Sürekli evde olamayan ve kapıda ödeme ile teslim alamayacak
+                            olanlar için online ödeme.</div>
+                    </div>
+                </div>
+
+                <!-- Stripe Card Element -->
+                <div id="stripe-card-container" style="display: none;">
+                    <div class="form-group">
+                        <label>Kart Bilgileri*</label>
+                        <div id="card-element"></div>
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" disabled>Siparişi Tamamla</button>
         </form>
     </div>
 
