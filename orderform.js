@@ -29,7 +29,7 @@ function initializeStripe() {
                 color: '#FFFFFF',
                 fontFamily: 'Montserrat, sans-serif',
                 fontSmoothing: 'antialiased',
-                fontSize: '15px',
+                fontSize: '14px',
                 '::placeholder': {
                     color: '#64748B'
                 }
@@ -40,7 +40,7 @@ function initializeStripe() {
             }
         };
 
-        cardNumber = elements.create('cardNumber', { style: style });
+        cardNumber = elements.create('cardNumber', { style: style, showIcon: true });
         cardExpiry = elements.create('cardExpiry', { style: style });
         cardCvc = elements.create('cardCvc', { style: style });
 

@@ -525,36 +525,45 @@ body {
 /* Stripe Card Container */
 #stripe-card-container {
     margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#stripe-card-container .form-group label {
+    font-size: 11px;
+    color: #94A3B8;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    /* Less aggressive than uppercase */
 }
 
 /* Stripe Card Element Styling */
 .stripe-form-row {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .stripe-form-row.two-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
 }
 
 .stripe-input {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1.5px solid rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 14px;
     transition: all 0.3s ease;
-    min-height: 48px;
-    /* Ensure consistent height */
+    min-height: 42px;
+    /* Set to a more compact height */
 }
 
 .stripe-input.StripeElement--focus {
     border-color: #5EEFA9;
     background: rgba(94, 239, 169, 0.05);
-    box-shadow: 0 0 0 3px rgba(94, 239, 169, 0.1);
+    box-shadow: 0 0 0 2px rgba(94, 239, 169, 0.1);
 }
 
 .stripe-input.StripeElement--invalid {
