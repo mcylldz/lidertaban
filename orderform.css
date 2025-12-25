@@ -449,39 +449,38 @@ body {
 
 /* Payment Option Cards */
 .payment-option {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 16px;
+    background: #FFFFFF;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 20px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .payment-option:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(243, 156, 18, 0.4);
-    transform: translateY(-2px);
+    border-color: rgba(243, 156, 18, 0.2);
 }
 
 .payment-option.selected {
     background: #FFF8E1;
     border-color: #F39C12;
-    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.15);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.1);
 }
 
 .payment-option-radio {
-    width: 24px;
-    height: 24px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    width: 26px;
+    height: 26px;
+    border: 2px solid #E2E8F0;
+    background: #fff;
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: 18px;
     flex-shrink: 0;
     position: relative;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .payment-option.selected .payment-option-radio {
@@ -510,15 +509,15 @@ body {
 }
 
 .payment-option-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #1A1F2C;
     margin-bottom: 4px;
 }
 
 .payment-option-subtitle {
-    font-size: 12px;
-    color: #94A3B8;
+    font-size: 14px;
+    color: #64748B;
     line-height: 1.4;
 }
 
@@ -551,13 +550,12 @@ body {
 }
 
 .stripe-input {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(2px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 10px 12px;
+    background: #111111;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    padding: 12px 14px;
     transition: all 0.3s ease;
-    min-height: 38px;
+    min-height: 44px;
 }
 
 .stripe-input.StripeElement--focus {
