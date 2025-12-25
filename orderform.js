@@ -267,14 +267,50 @@ function updateSubmitButton() {
     const submitBtn = document.querySelector('.btn-submit');
     if (!submitBtn) return;
 
-    // Enable button if:
-    // 1. A package is selected AND
-    // 2. (COD is selected OR (Online is selected AND card is complete))
-    const shouldEnable = selectedPackageId !== null &&
-        (selectedPaymentMethod === 'cod' ||
-            (selectedPaymentMethod === 'online' && cardComplete));
+    if (selectedPackageId === null) {
+        submitBtn.innerText = 'LÜTFEN BİR PAKET SEÇİN';
+        submitBtn.disabled = false; // Stay enabled so it can trigger scroll
+        submitBtn.classList.add('waiting-selection');
+    } else {
+        submitBtn.innerText = 'SİPARİŞİ TAMAMLA';
+        submitBtn.classList.remove('waiting-selection');
 
-    submitBtn.disabled = !shouldEnable;
+        // Enable completion if COD or (Online and cardComplete)
+        const isPaymentReady = selectedPaymentMethod === 'cod' ||
+            (selectedPaymentMethod === 'online' && cardComplete);
+
+        submitBtn.disabled = !isPaymentReady;
+    }
+}
+
+// Function to scroll up to packages smoothly
+function scrollToPackages() {
+    const packagesSection = document.querySelector('.packages-container');
+    if (packagesSection) {
+        const startPosition = window.pageYOffset;
+        const targetPosition = packagesSection.getBoundingClientRect().top + window.pageYOffset - 20;
+        const distance = targetPosition - startPosition;
+        const duration = 1200; // Even slower for better UX
+        let start = null;
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        }
+
+        function animation(currentTime) {
+            if (start === null) start = currentTime;
+            const timeElapsed = currentTime - start;
+            const progress = Math.min(timeElapsed / duration, 1);
+            const ease = easeInOutCubic(progress);
+
+            window.scrollTo(0, startPosition + distance * ease);
+
+            if (timeElapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        }
+        requestAnimationFrame(animation);
+    }
 }
 
 // Get package price
@@ -312,8 +348,15 @@ if (orderForm) {
     orderForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        if (!selectedPackageId || !selectedPaymentMethod) {
-            alert('Lütfen bir paket ve ödeme yöntemi seçin.');
+        // 1. Check if package is selected
+        if (!selectedPackageId) {
+            scrollToPackages();
+            return;
+        }
+
+        // 2. Check if payment method is selected
+        if (!selectedPaymentMethod) {
+            alert('Lütfen bir ödeme yöntemi seçin.');
             return;
         }
 

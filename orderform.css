@@ -550,14 +550,13 @@ body {
 }
 
 .stripe-input {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 8px 12px;
     transition: all 0.3s ease;
-    min-height: 42px;
-    /* Set to a more compact height */
+    min-height: 38px;
 }
 
 .stripe-input.StripeElement--focus {
