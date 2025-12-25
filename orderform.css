@@ -530,22 +530,34 @@ body {
 }
 
 /* Stripe Card Element Styling */
-#card-element {
+.stripe-form-row {
+    margin-bottom: 15px;
+}
+
+.stripe-form-row.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.stripe-input {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
     border-radius: 10px;
     padding: 14px 16px;
     transition: all 0.3s ease;
+    min-height: 48px;
+    /* Ensure consistent height */
 }
 
-#card-element.StripeElement--focus {
+.stripe-input.StripeElement--focus {
     border-color: #5EEFA9;
     background: rgba(94, 239, 169, 0.05);
     box-shadow: 0 0 0 3px rgba(94, 239, 169, 0.1);
 }
 
-#card-element.StripeElement--invalid {
+.stripe-input.StripeElement--invalid {
     border-color: #EF4444;
 }
 

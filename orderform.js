@@ -7,55 +7,65 @@ const CONFIG = {
 let selectedPackageId = null; // No default selection
 let selectedPaymentMethod = null; // 'cod' or 'online'
 let stripe = null;
-let cardElement = null;
-let cardComplete = false;
+let cardNumber = null;
+let cardExpiry = null;
+let cardCvc = null;
+let cardStates = {
+    number: false,
+    expiry: false,
+    cvc: false
+};
 
-// Initialize Stripe
 // Initialize Stripe
 function initializeStripe() {
-    // Note: In a raw HTML environment without Vite, import.meta.env causes a SyntaxError.
-    // We try to get the key from potential global variables or fallback.
-    const publishableKey = window.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx'; // Fallback / Placeholder
-
-    console.log("OrderForm JS initialized. Stripe Key:", publishableKey ? "Found" : "Missing");
+    const publishableKey = window.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
 
     if (publishableKey) {
         stripe = Stripe(publishableKey);
         const elements = stripe.elements();
 
-        // Create card element with custom styling
-        cardElement = elements.create('card', {
-            style: {
-                base: {
-                    color: '#FFFFFF',
-                    fontFamily: 'Montserrat, sans-serif',
-                    fontSmoothing: 'antialiased',
-                    fontSize: '15px',
-                    '::placeholder': {
-                        color: '#64748B'
-                    }
-                },
-                invalid: {
-                    color: '#EF4444',
-                    iconColor: '#EF4444'
+        const style = {
+            base: {
+                color: '#FFFFFF',
+                fontFamily: 'Montserrat, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '15px',
+                '::placeholder': {
+                    color: '#64748B'
                 }
+            },
+            invalid: {
+                color: '#EF4444',
+                iconColor: '#EF4444'
             }
-        });
+        };
 
-        // Listen for card input changes
-        cardElement.on('change', function (event) {
+        cardNumber = elements.create('cardNumber', { style: style });
+        cardExpiry = elements.create('cardExpiry', { style: style });
+        cardCvc = elements.create('cardCvc', { style: style });
+
+        const handleChange = (type, event) => {
             const displayError = document.getElementById('card-errors');
             if (event.error) {
                 displayError.textContent = event.error.message;
-                cardComplete = false;
+                cardStates[type] = false;
             } else {
                 displayError.textContent = '';
-                cardComplete = event.complete;
+                cardStates[type] = event.complete;
             }
+
+            // All three must be complete
+            cardComplete = cardStates.number && cardStates.expiry && cardStates.cvc;
             updateSubmitButton();
-        });
+        };
+
+        cardNumber.on('change', (e) => handleChange('number', e));
+        cardExpiry.on('change', (e) => handleChange('expiry', e));
+        cardCvc.on('change', (e) => handleChange('cvc', e));
+
+        console.log("OrderForm JS: Stripe Elements created.");
     } else {
-        console.warn('Stripe publishable key not found. Online payment will not be available.');
+        console.warn('Stripe publishable key not found.');
     }
 }
 
@@ -220,10 +230,10 @@ function setupPaymentMethodSelection() {
             onlineOption.classList.remove('selected');
             stripeContainer.style.display = 'none';
 
-            // Unmount card element if it was mounted
-            if (cardElement && cardElement._parent) {
-                cardElement.unmount();
-            }
+            // Unmount elements if they were mounted
+            if (cardNumber && cardNumber._parent) cardNumber.unmount();
+            if (cardExpiry && cardExpiry._parent) cardExpiry.unmount();
+            if (cardCvc && cardCvc._parent) cardCvc.unmount();
 
             cardComplete = false;
             updateSubmitButton();
@@ -242,10 +252,10 @@ function setupPaymentMethodSelection() {
             codOption.classList.remove('selected');
             stripeContainer.style.display = 'block';
 
-            // Mount card element if not already mounted
-            if (cardElement && !cardElement._parent) {
-                cardElement.mount('#card-element');
-            }
+            // Mount elements if not already mounted
+            if (cardNumber && !cardNumber._parent) cardNumber.mount('#card-number');
+            if (cardExpiry && !cardExpiry._parent) cardExpiry.mount('#card-expiry');
+            if (cardCvc && !cardCvc._parent) cardCvc.mount('#card-cvc');
 
             updateSubmitButton();
         });
@@ -371,7 +381,7 @@ if (orderForm) {
                 // Confirm card payment
                 const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
                     payment_method: {
-                        card: cardElement,
+                        card: cardNumber,
                         billing_details: {
                             name: `${data.name} ${data.surname}`,
                             phone: data.phone.replace(/\s/g, '')
