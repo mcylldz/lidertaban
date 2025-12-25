@@ -40,8 +40,8 @@ function initializeStripe() {
                 }
             },
             invalid: {
-                color: '#EF4444',
-                iconColor: '#EF4444'
+                color: '#df1b41',
+                iconColor: '#df1b41'
             }
         };
 

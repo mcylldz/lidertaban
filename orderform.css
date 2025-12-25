@@ -539,29 +539,30 @@ body {
 
 /* Stripe Card Element Styling */
 .stripe-form-row {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    /* Compact spacing */
 }
 
 .stripe-form-row.two-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
     /* Even tighter for 'kibar' look */
 }
 
 .stripe-input {
-    background: #111111;
+    background: #1a1a1a;
     border: 1px solid #333333;
-    border-radius: 10px;
-    padding: 12px 14px;
+    border-radius: 8px;
+    padding: 10px 12px;
     transition: all 0.3s ease;
-    min-height: 44px;
+    min-height: 40px;
 }
 
 .stripe-input.StripeElement--focus {
-    border-color: #F39C12;
-    background: rgba(243, 156, 18, 0.05);
-    box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
+    border-color: #5EEFA9;
+    background: rgba(94, 239, 169, 0.05);
+    box-shadow: 0 0 0 2px rgba(94, 239, 169, 0.2);
 }
 
 .stripe-input.StripeElement--invalid {
