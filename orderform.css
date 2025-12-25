@@ -344,7 +344,7 @@ body {
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .form-group label {
@@ -529,12 +529,12 @@ body {
 }
 
 #stripe-card-container .form-group label {
-    font-size: 11px;
-    color: #94A3B8;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
+    font-size: 13px;
+    color: #FFFFFF !important;
+    margin-bottom: 8px;
+    letter-spacing: normal;
     text-transform: none;
-    /* Less aggressive than uppercase */
+    font-weight: 500;
 }
 
 /* Stripe Card Element Styling */
@@ -556,7 +556,6 @@ body {
     border-radius: 8px;
     padding: 10px 12px;
     transition: all 0.3s ease;
-    min-height: 40px;
 }
 
 .stripe-input.StripeElement--focus {
