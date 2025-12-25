@@ -17,12 +17,14 @@ exports.handler = async (event) => {
         };
     }
 
-    // Only allow POST
-    if (event.httpMethod !== 'POST') {
+    // Handle GET for config
+    if (event.httpMethod === 'GET') {
         return {
-            statusCode: 405,
+            statusCode: 200,
             headers,
-            body: JSON.stringify({ error: 'Method not allowed' })
+            body: JSON.stringify({
+                publishableKey: process.env.VITE_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY
+            })
         };
     }
 
@@ -58,7 +60,8 @@ exports.handler = async (event) => {
             statusCode: 200,
             headers,
             body: JSON.stringify({
-                clientSecret: paymentIntent.client_secret
+                clientSecret: paymentIntent.client_secret,
+                publishableKey: process.env.VITE_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY
             })
         };
 

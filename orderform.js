@@ -17,72 +17,92 @@ let cardStates = {
 };
 
 // Initialize Stripe
-function initializeStripe() {
-    const publishableKey = window.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx';
+async function initializeStripe() {
+    try {
+        // Fetch publishable key from backend
+        const configResponse = await fetch('/.netlify/functions/create-payment-intent');
+        const config = await configResponse.json();
+        const publishableKey = config.publishableKey;
 
-    if (publishableKey) {
-        stripe = Stripe(publishableKey);
+        if (publishableKey) {
+            stripe = Stripe(publishableKey);
 
-        // Use Appearance-like styling within the elements() constructor or per element
-        const elements = stripe.elements({
-            // Note: In older Stripe JS versions/Individual elements, wallets are disabled by not using the Payment Element.
-            // But we can ensure standard layout and no link.
-        });
+            // Use Appearance-like styling within the elements() constructor or per element
+            const elements = stripe.elements();
 
-        const style = {
-            base: {
-                color: '#FFFFFF',
-                fontFamily: 'Montserrat, sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '14px',
-                '::placeholder': {
-                    color: '#64748B'
+            const style = {
+                base: {
+                    color: '#FFFFFF',
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '14px',
+                    '::placeholder': {
+                        color: '#64748B'
+                    }
+                },
+                invalid: {
+                    color: '#df1b41',
+                    iconColor: '#df1b41'
                 }
-            },
-            invalid: {
-                color: '#df1b41',
-                iconColor: '#df1b41'
+            };
+
+            // Individual elements configuration ensures Link/Wallets are not shown
+            cardNumber = elements.create('cardNumber', {
+                style: style,
+                showIcon: true,
+                placeholder: 'Kart Numarası'
+            });
+            cardExpiry = elements.create('cardExpiry', {
+                style: style,
+                placeholder: 'AA / YY'
+            });
+            cardCvc = elements.create('cardCvc', {
+                style: style,
+                placeholder: 'CVC'
+            });
+
+            const handleChange = (type, event) => {
+                const displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                    cardStates[type] = false;
+                } else {
+                    displayError.textContent = '';
+                    cardStates[type] = event.complete;
+                }
+
+                // All three must be complete
+                cardComplete = cardStates.number && cardStates.expiry && cardStates.cvc;
+                updateSubmitButton();
+            };
+
+            cardNumber.on('change', (e) => handleChange('number', e));
+            cardExpiry.on('change', (e) => handleChange('expiry', e));
+            cardCvc.on('change', (e) => handleChange('cvc', e));
+
+            console.log("OrderForm JS: Stripe Elements initialized with key from backend.");
+
+            // Check if online payment was already selected (e.g. page refresh)
+            // and mount elements if necessary
+            if (selectedPaymentMethod === 'online') {
+                mountStripeElements();
             }
-        };
 
-        // Individual elements configuration ensures Link/Wallets are not shown
-        cardNumber = elements.create('cardNumber', {
-            style: style,
-            showIcon: true,
-            placeholder: 'Kart Numarası'
-        });
-        cardExpiry = elements.create('cardExpiry', {
-            style: style,
-            placeholder: 'AA / YY'
-        });
-        cardCvc = elements.create('cardCvc', {
-            style: style,
-            placeholder: 'CVC'
-        });
-
-        const handleChange = (type, event) => {
-            const displayError = document.getElementById('card-errors');
-            if (event.error) {
-                displayError.textContent = event.error.message;
-                cardStates[type] = false;
-            } else {
-                displayError.textContent = '';
-                cardStates[type] = event.complete;
-            }
-
-            // All three must be complete
-            cardComplete = cardStates.number && cardStates.expiry && cardStates.cvc;
-            updateSubmitButton();
-        };
-
-        cardNumber.on('change', (e) => handleChange('number', e));
-        cardExpiry.on('change', (e) => handleChange('expiry', e));
-        cardCvc.on('change', (e) => handleChange('cvc', e));
-
-        console.log("OrderForm JS: Stripe Elements created.");
-    } else {
-        console.warn('Stripe publishable key not found.');
+        } else {
+            console.error('Stripe publishable key not received from backend.');
+        }
+    } catch (err) {
+        console.error('Failed to initialize Stripe:', err);
     }
+}
+
+function mountStripeElements() {
+    const stripeContainer = document.getElementById('stripe-card-container');
+    if (!stripeContainer || stripeContainer.style.display === 'none') return;
+
+    if (cardNumber && !cardNumber._parent) cardNumber.mount('#card-number');
+    if (cardExpiry && !cardExpiry._parent) cardExpiry.mount('#card-expiry');
+    if (cardCvc && !cardCvc._parent) cardCvc.mount('#card-cvc');
 }
 
 function selectPackage(id) {
