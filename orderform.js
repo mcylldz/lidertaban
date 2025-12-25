@@ -22,7 +22,12 @@ function initializeStripe() {
 
     if (publishableKey) {
         stripe = Stripe(publishableKey);
-        const elements = stripe.elements();
+
+        // Use Appearance-like styling within the elements() constructor or per element
+        const elements = stripe.elements({
+            // Note: In older Stripe JS versions/Individual elements, wallets are disabled by not using the Payment Element.
+            // But we can ensure standard layout and no link.
+        });
 
         const style = {
             base: {
@@ -40,9 +45,20 @@ function initializeStripe() {
             }
         };
 
-        cardNumber = elements.create('cardNumber', { style: style, showIcon: true });
-        cardExpiry = elements.create('cardExpiry', { style: style });
-        cardCvc = elements.create('cardCvc', { style: style });
+        // Individual elements configuration ensures Link/Wallets are not shown
+        cardNumber = elements.create('cardNumber', {
+            style: style,
+            showIcon: true,
+            placeholder: 'Kart Numarası'
+        });
+        cardExpiry = elements.create('cardExpiry', {
+            style: style,
+            placeholder: 'AA / YY'
+        });
+        cardCvc = elements.create('cardCvc', {
+            style: style,
+            placeholder: 'CVC'
+        });
 
         const handleChange = (type, event) => {
             const displayError = document.getElementById('card-errors');

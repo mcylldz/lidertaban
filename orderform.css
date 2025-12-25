@@ -463,14 +463,14 @@ body {
 
 .payment-option:hover {
     background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(94, 239, 169, 0.3);
+    border-color: rgba(243, 156, 18, 0.4);
     transform: translateY(-2px);
 }
 
 .payment-option.selected {
-    background: rgba(94, 239, 169, 0.1);
-    border-color: #5EEFA9;
-    box-shadow: 0 4px 15px rgba(94, 239, 169, 0.2);
+    background: #FFF8E1;
+    border-color: #F39C12;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.15);
 }
 
 .payment-option-radio {
@@ -485,13 +485,13 @@ body {
 }
 
 .payment-option.selected .payment-option-radio {
-    border-color: #5EEFA9;
+    border-color: #F39C12;
 }
 
 .payment-option-radio .radio-dot {
     width: 12px;
     height: 12px;
-    background-color: #5EEFA9;
+    background-color: #F39C12;
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -502,7 +502,7 @@ body {
 
 .payment-option.selected .payment-option-radio .radio-dot {
     transform: translate(-50%, -50%) scale(1) !important;
-    background-color: #5EEFA9;
+    background-color: #F39C12;
 }
 
 .payment-option-content {
@@ -512,7 +512,7 @@ body {
 .payment-option-title {
     font-size: 15px;
     font-weight: 700;
-    color: #FFFFFF;
+    color: #1A1F2C;
     margin-bottom: 4px;
 }
 
@@ -546,23 +546,24 @@ body {
 .stripe-form-row.two-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
+    /* Even tighter for 'kibar' look */
 }
 
 .stripe-input {
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(2px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
     transition: all 0.3s ease;
     min-height: 38px;
 }
 
 .stripe-input.StripeElement--focus {
-    border-color: #5EEFA9;
-    background: rgba(94, 239, 169, 0.05);
-    box-shadow: 0 0 0 2px rgba(94, 239, 169, 0.1);
+    border-color: #F39C12;
+    background: rgba(243, 156, 18, 0.05);
+    box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
 }
 
 .stripe-input.StripeElement--invalid {
