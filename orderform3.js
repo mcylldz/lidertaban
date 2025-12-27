@@ -300,9 +300,9 @@ function scrollToPackages() {
 
 // Get package price
 function getPackagePrice(packageId) {
-    if (packageId == 1) return { total: 1059, base: 999, shipping: 60 };
-    if (packageId == 2) return { total: 1559, base: 1499, shipping: 60 };
-    if (packageId == 3) return { total: 1799, base: 1799, shipping: 0 };
+    if (packageId == 1) return { total: 859, base: 799, shipping: 60 };
+    if (packageId == 2) return { total: 1259, base: 1199, shipping: 60 };
+    if (packageId == 3) return { total: 1439, base: 1439, shipping: 0 };
     return { total: 0, base: 0, shipping: 0 };
 }
 
@@ -358,8 +358,8 @@ if (orderForm) {
         data.package_id = selectedPackageId;
         data.payment_method = selectedPaymentMethod;
         data.timestamp = new Date().toISOString();
-        data.ab_test_variation = 'A';
-        data.order_source = 'orderform';
+        data.ab_test_variation = 'C';
+        data.order_source = 'orderform3';
 
         // Get pricing
         const pricing = getPackagePrice(selectedPackageId);
