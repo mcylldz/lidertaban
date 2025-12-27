@@ -53,6 +53,11 @@
 <body>
     <img src="orderform.webp" alt="" class="header-image">
 
+    <div class="size-notification">
+        Tabanlıklarımız sabit boydur. 36 numaradan 45 Numaraya kadar kendi ayağınıza göre keserek gönül rahatlığıyla
+        kullanabilirsiniz.
+    </div>
+
     <div class="packages-container">
         <!-- Package 1 - BAŞLANGIÇ PAKETİ -->
         <div class="package" onclick="selectPackage(1)" id="package-1" data-items="1">
@@ -64,7 +69,7 @@
                 <div class="package-left">
                     <div class="radio-circle"></div>
                     <div class="package-image-placeholder">
-                        <img src="baslangicv3.png" alt="Baslangic Paketi" class="pkg-img">
+                        <img src="baslangicv3.png" alt="Baslangic Paketi" class="pkg-img reduced-size">
                     </div>
                 </div>
                 <div class="package-right">
@@ -89,7 +94,7 @@
                 <div class="package-left">
                     <div class="radio-circle"></div>
                     <div class="package-image-placeholder">
-                        <img src="avantajv4.png" alt="Avantaj Paketi" class="pkg-img">
+                        <img src="avantajv4.png" alt="Avantaj Paketi" class="pkg-img reduced-size">
                     </div>
                 </div>
                 <div class="package-right">
@@ -158,10 +163,6 @@
             <div class="form-header-subtitle">Kapıda kart yada nakit ödeme ile siparişini teslim alabilirsin.</div>
         </div>
         <form id="orderForm">
-            <!-- Dynamic Size Selector -->
-            <div id="size-selectors-container">
-                <!-- Will be populated by JS -->
-            </div>
 
             <!-- Customer Info -->
             <div class="form-group">

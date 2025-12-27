@@ -143,9 +143,6 @@ function selectPackage(id) {
         // 3. Update Warning Count (Random new number)
         updateStockCount();
 
-        // 4. Update Order Form Size Selector
-        const itemCount = parseInt(selectedPkg.getAttribute('data-items'));
-        renderSizeSelectors(itemCount);
 
         // 5. Smooth and slow scroll to form section
         setTimeout(() => {
@@ -204,54 +201,6 @@ function updateStockCount() {
     }
 }
 
-function renderSizeSelectors(count) {
-    const container = document.getElementById('size-selectors-container');
-    if (!container) return;
-
-    container.innerHTML = ''; // Clear existing
-
-    // Toggle grid layout class if count > 1
-    if (count > 1) {
-        container.classList.add('grid-layout');
-    } else {
-        container.classList.remove('grid-layout');
-    }
-
-    for (let i = 1; i <= count; i++) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'size-selector-group';
-
-        const label = document.createElement('label');
-        label.className = 'size-label';
-        label.innerText = `${i}. Çift İçin Beden Seçiniz*`;
-
-        const select = document.createElement('select');
-        select.name = `size_${i}`;
-        select.required = true;
-
-        const options = [
-            { val: '', text: 'Beden Seçiniz' },
-            { val: '32-34', text: '32 - 34' },
-            { val: '35-37', text: '35 - 37' },
-            { val: '38-40', text: '38 - 40' },
-            { val: '41-43', text: '41 - 43' },
-            { val: '44-46', text: '44 - 46' }
-        ];
-
-        options.forEach(opt => {
-            const option = document.createElement('option');
-            option.value = opt.val;
-            option.innerText = opt.text;
-            if (opt.val === '') option.disabled = true;
-            if (opt.val === '') option.selected = true;
-            select.appendChild(option);
-        });
-
-        wrapper.appendChild(label);
-        wrapper.appendChild(select);
-        container.appendChild(wrapper);
-    }
-}
 
 // Payment Method Selection
 function setupPaymentMethodSelection() {
@@ -521,6 +470,4 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPaymentMethodSelection();
 
     // Don't select any package by default - user must choose
-    // Just render empty size selector
-    renderSizeSelectors(0);
 });

@@ -22,6 +22,20 @@ body {
     gap: 15px;
 }
 
+.size-notification {
+    max-width: 800px;
+    margin: 0 auto 15px;
+    padding: 12px 20px;
+    background-color: #E2E8F0;
+    border-left: 4px solid #1A2332;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A2332;
+    line-height: 1.5;
+    text-align: center;
+}
+
 /* Package Card Styles */
 .package {
     background: #fff;
@@ -146,6 +160,11 @@ body {
     object-fit: contain;
     mix-blend-mode: multiply;
     transform: scale(1.15);
+}
+
+.pkg-img.reduced-size {
+    transform: scale(0.92);
+    /* Reduced from 1.15 to ~0.92 (20% reduction in visible scale) */
 }
 
 .package-content {
