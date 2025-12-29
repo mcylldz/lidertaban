@@ -47,19 +47,19 @@
     <img src="01.webp" alt="">
     <video src="1.1.mp4" autoplay loop muted playsinline></video>
     <img src="02.webp" alt="">
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="03.webp" alt=""></a>
+    <a href="orderform3.html"><img src="03.webp" alt=""></a>
     <img src="04.webp" alt="">
     <img src="05.webp" alt="">
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="10.webp" alt=""></a>
+    <a href="orderform3.html"><img src="10.webp" alt=""></a>
     <img src="06.webp" alt="">
     <img src="07.webp" alt="">
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="10.webp" alt=""></a>
+    <a href="orderform3.html"><img src="10.webp" alt=""></a>
     <img src="08.webp" alt="">
     <img src="09.webp" alt="">
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="10.webp" alt=""></a>
+    <a href="orderform3.html"><img src="10.webp" alt=""></a>
     <img src="11.webp" alt="">
     <img src="12.webp" alt="">
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="13.webp" alt=""></a>
+    <a href="orderform3.html"><img src="13.webp" alt=""></a>
     <img src="14.webp" alt="">
     <div class="video-container"
         style="position: relative; width: 100%; height: auto; display: block; margin: 0; padding: 0;">
@@ -103,37 +103,7 @@
         });
     </script>
 
-    <script>
-        // A/B Test Router
-        function handleOrderClick(event) {
-            event.preventDefault();
-
-            // Check if user already has an assigned variation
-            let variation = localStorage.getItem('ab_test_variation');
-
-            if (!variation) {
-                const rand = Math.random();
-                if (rand < 0.33) {
-                    variation = 'A';
-                } else if (rand < 0.66) {
-                    variation = 'B';
-                } else {
-                    variation = 'C';
-                }
-                localStorage.setItem('ab_test_variation', variation);
-            }
-
-            // Route based on variation
-            if (variation === 'B') {
-                window.location.href = 'orderform2.html';
-            } else if (variation === 'C') {
-                window.location.href = 'orderform3.html';
-            } else {
-                window.location.href = 'orderform.html';
-            }
-        }
-    </script>
-    <a href="orderform.html" onclick="handleOrderClick(event)"><img src="15.webp" alt=""></a>
+    <a href="orderform3.html"><img src="15.webp" alt=""></a>
     <img src="16.webp" alt="">
 </body>
 
