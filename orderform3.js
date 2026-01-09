@@ -355,6 +355,7 @@ if (orderForm) {
         const data = Object.fromEntries(formData.entries());
 
         // Add metadata
+        data.Product = 'Tabanlık';
         data.package_id = selectedPackageId;
         data.payment_method = selectedPaymentMethod;
         data.timestamp = new Date().toISOString();
